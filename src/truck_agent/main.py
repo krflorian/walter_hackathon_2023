@@ -29,6 +29,8 @@ best_cities = ["Berlin", "Warsaw", "Vienna", "Milan", "Munich"]
 diesel_price = 2.023
 diesel_consumption_full = 23
 diesel_consumption_empty = 14
+co2_empty = 0.4
+co2_full = 0.59
 
 
 def get_profit_for_offer(offer: CargoOffer):
@@ -74,7 +76,7 @@ def decide(req: DecideRequest) -> DecideResponse:
 
             if graph.nodes[offer.dest]["observed_values"]:
                 observed = graph.nodes[offer.dest]["observed_values"]
-                profit = 0.8 * profit + 0.2 * (sum(observed) / len(observed))
+                profit = 0.9 * profit + 0.1 * (sum(observed) / len(observed))
 
             if profit > best_profit:
                 best_profit = profit

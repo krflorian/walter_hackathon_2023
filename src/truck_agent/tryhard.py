@@ -48,9 +48,19 @@ for city in map_data:
             kmh=destination["kmh"],
         )
 
+for node in graph.nodes:
+    graph.add_node(node, observed_values=[])
+
+graph.nodes["Berlin"]
+
 #%%
 
-graph["Berlin"]["Hamburg"]
+graph.add_node("Berlin", observed_values=[])
+
+
+#%%
+
+graph["Berlin"]
 
 
 #%%
@@ -98,6 +108,17 @@ request = DecideRequest(**offer_data)
 best_cities = ["Berlin", "Warsaw", "Vienna", "Milan", "Munich"]
 
 
+def get_profit_for_offer(offer):
+    distance = offer.km_to_deliver - offer.km_to_cargo
+    cost = distance * diesel_price * (diesel_consumption / 100)
+    return (offer.price - cost) / (offer.eta_to_deliver - offer.eta_to_cargo)
+
+
+def calculate_profit(offer: CargoOffer):
+    cost = offer.km_to_cargo * diesel_price * (diesel_consumption / 100)
+    return (offer.price - cost) / offer.eta_to_deliver
+
+
 def decide(req: DecideRequest) -> DecideResponse:
     """
     See https://app.swaggerhub.com/apis-docs/walter-group/walter-group-hackathon-sustainable-logistics/1.0.0 for
@@ -109,20 +130,34 @@ def decide(req: DecideRequest) -> DecideResponse:
     else:
         command = "ROUTE"
 
+    for offer in req.offers:
+        profit = get_profit_for_offer(offer)
+        graph.nodes[offer.origin]["observed_values"].append(profit)
+
     ##########################################
     if command == "DELIVER":
 
         best_profit = 0
         best_offer = None
         for offer in req.offers:
+
             profit = calculate_profit(offer)
+
+            if graph.nodes[offer.dest]["observed_values"]:
+                print("taking observed values")
+                observed = graph.nodes[offer.dest]["observed_values"]
+                profit = 0.8 * profit + 0.2 * (sum(observed) / len(observed))
+
             if profit > best_profit:
                 best_profit = profit
                 best_offer = offer
 
+        if best_profit == 0:
+            command = "ROUTE"
+
         return DecideResponse(command="DELIVER", argument=best_offer.uid)
 
-    elif command == "ROUTE":
+    if command == "ROUTE":
 
         current_loc = req.truck.loc
         best_distance = 100000
@@ -139,7 +174,50 @@ def decide(req: DecideRequest) -> DecideResponse:
         return DecideResponse(command="SLEEP", argument=1)
 
 
-request.offers = []
+# request.offers = []
 decide(request)
 
 # %%
+
+
+def get_profit_for_offer(offer):
+    distance = offer.km_to_deliver - offer.km_to_cargo
+    cost = distance * diesel_price * (diesel_consumption / 100)
+    return (offer.price - cost) / (offer.eta_to_deliver - offer.eta_to_cargo)
+
+
+#%%
+graph.nodes["Berlin"]["observed_values"].append(100)
+graph.nodes["Berlin"]
+
+#%%
+
+all_profits = []
+for offer in request.offers:
+    profit = get_profit_for_offer(offer)
+    all_profits.append((profit, offer.origin))
+    graph.nodes[offer.origin]["observed_values"].append(profit)
+
+all_profits
+
+#%%
+
+graph.nodes["Valencia"]
+
+
+#%%
+
+diesel_price = 2.023
+diesel_consumption_full = 23
+diesel_consumption_empty = 14
+
+
+def calculate_profit(offer: CargoOffer):
+    empty = offer.km_to_cargo
+    full = offer.km_to_deliver - offer.km_to_cargo
+    cost_empty = empty * diesel_price * (diesel_consumption_empty / 100)
+    cost_full = full * diesel_price * (diesel_consumption_full / 100)
+    return (offer.price - cost_empty - cost_full) / offer.eta_to_deliver
+
+
+calculate_profit(request.offers[2])

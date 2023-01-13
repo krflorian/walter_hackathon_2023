@@ -31,7 +31,7 @@ diesel_consumption = 20
 
 
 def calculate_profit(offer: CargoOffer):
-    cost = offer.km_to_cargo * diesel_price * (diesel_consumption / 100)
+    cost = offer.km_to_deliver * diesel_price * (diesel_consumption / 100)
     return (offer.price - cost) / offer.eta_to_deliver
 
 

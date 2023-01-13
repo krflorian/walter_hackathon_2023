@@ -2,7 +2,7 @@ FROM python:alpine
 
 WORKDIR /app
 
-COPY README.md setup.py .
+COPY README.md setup.py map.json .
 COPY src /app/src
 
 RUN pip install .

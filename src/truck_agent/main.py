@@ -55,9 +55,12 @@ def decide(req: DecideRequest) -> DecideResponse:
                 best_profit = profit
                 best_offer = offer
 
+        if best_profit == 0:
+            command = "ROUTE"
+
         return DecideResponse(command="DELIVER", argument=best_offer.uid)
 
-    elif command == "ROUTE":
+    if command == "ROUTE":
 
         current_loc = req.truck.loc
         best_distance = 100000

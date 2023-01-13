@@ -38,10 +38,8 @@ def driver_rested_at_cargo(truck: TruckState, offer: CargoOffer):
 
 
 diesel_price = 2.023
-diesel_consumption_full = 23
-diesel_consumption_empty = 14
-co2_consumption_empty = 40
-co2_consumption_full = 59
+diesel_consumption_full = 22
+diesel_consumption_empty = 15
 
 
 def get_profit_for_offer(offer: CargoOffer):
@@ -80,8 +78,10 @@ def decide(req: DecideRequest) -> DecideResponse:
             graph.nodes[offer.origin]["observed_values"].append(profit)
     """
 
-    if 20 < req.truck.time % 24 < 24:
-        return DecideResponse(command="SLEEP", argument=8)
+    current_time = req.truck.time % 24
+    if (20 < current_time % 24 < 24) or (0 < current_time % 24 < 5):
+        if req.truck.hours_since_full_rest > 12:
+            return DecideResponse(command="SLEEP", argument=8)
 
     ##########################################
     if command == "DELIVER":
@@ -91,6 +91,9 @@ def decide(req: DecideRequest) -> DecideResponse:
         for offer in req.offers:
 
             profit = calculate_profit(offer)
+            time_at_cargo = (req.truck.time + offer.eta_to_cargo) % 24
+
+            # if time_at_cargo
 
             if profit > best_profit:
                 best_profit = profit

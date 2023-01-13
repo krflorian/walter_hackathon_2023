@@ -29,8 +29,8 @@ best_cities = ["Berlin", "Warsaw", "Vienna", "Milan", "Munich"]
 diesel_price = 2.023
 diesel_consumption_full = 23
 diesel_consumption_empty = 14
-co2_empty = 0.4
-co2_full = 0.59
+co2_consumption_empty = 40
+co2_consumption_full = 59
 
 
 def get_profit_for_offer(offer: CargoOffer):
@@ -66,7 +66,7 @@ def decide(req: DecideRequest) -> DecideResponse:
         if profit > 0:
             graph.nodes[offer.origin]["observed_values"].append(profit)
 
-    if req.truck.hours_since_full_rest > 10:
+    if req.truck.hours_since_full_rest > 16:
         return DecideResponse(command="SLEEP", argument=8)
 
     ##########################################
@@ -84,10 +84,10 @@ def decide(req: DecideRequest) -> DecideResponse:
 
                 time_at_cargo = (req.truck.time + offer.eta_to_cargo) % 24
 
-                if time_at_cargo < 15:
-                    if profit > best_profit:
-                        best_profit = profit
-                        best_offer = offer
+                # if time_at_cargo < 15:
+                if profit > best_profit:
+                    best_profit = profit
+                    best_offer = offer
 
         if best_profit == 0:
             command = "ROUTE"

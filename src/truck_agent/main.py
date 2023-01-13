@@ -79,7 +79,7 @@ def decide(req: DecideRequest) -> DecideResponse:
             graph.nodes[offer.origin]["observed_values"].append(profit)
     """
 
-    if req.truck.hours_since_full_rest > 16:
+    if 20 < req.truck.time % 24 < 24:
         return DecideResponse(command="SLEEP", argument=8)
 
     ##########################################

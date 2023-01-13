@@ -76,8 +76,8 @@ def decide(req: DecideRequest) -> DecideResponse:
 
         if best_profit == 0:
             command = "ROUTE"
-
-        return DecideResponse(command="DELIVER", argument=best_offer.uid)
+        else:
+            return DecideResponse(command="DELIVER", argument=best_offer.uid)
 
     if command == "ROUTE":
 
@@ -91,6 +91,7 @@ def decide(req: DecideRequest) -> DecideResponse:
                 best_distance = distance
 
         return DecideResponse(command="ROUTE", argument=next_city)
+
     else:
 
         return DecideResponse(command="SLEEP", argument=1)

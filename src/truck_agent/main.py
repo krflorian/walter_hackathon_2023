@@ -82,9 +82,12 @@ def decide(req: DecideRequest) -> DecideResponse:
                 observed = graph.nodes[offer.dest]["observed_values"]
                 profit = 0.9 * profit + 0.1 * (sum(observed) / len(observed))
 
-            if profit > best_profit:
-                best_profit = profit
-                best_offer = offer
+                time_at_cargo = (req.truck.time + offer.eta_to_cargo) % 24
+
+                if time_at_cargo < 15:
+                    if profit > best_profit:
+                        best_profit = profit
+                        best_offer = offer
 
         if best_profit == 0:
             command = "ROUTE"

@@ -221,3 +221,6 @@ def calculate_profit(offer: CargoOffer):
 
 
 calculate_profit(request.offers[2])
+
+
+#%%

@@ -63,7 +63,11 @@ def decide(req: DecideRequest) -> DecideResponse:
 
     for offer in req.offers:
         profit = get_profit_for_offer(offer)
-        graph.nodes[offer.origin]["observed_values"].append(profit)
+        if profit > 0:
+            graph.nodes[offer.origin]["observed_values"].append(profit)
+
+    if req.truck.hours_since_full_rest > 10:
+        return DecideResponse(command="SLEEP", argument=8)
 
     ##########################################
     if command == "DELIVER":

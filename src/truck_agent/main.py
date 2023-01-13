@@ -30,8 +30,14 @@ diesel_price = 2.023
 diesel_consumption = 20
 
 
+def get_profit_for_offer(offer):
+    distance = offer.km_to_deliver - offer.km_to_cargo
+    cost = distance * diesel_price * (diesel_consumption / 100)
+    return (offer.price - cost) / (offer.eta_to_deliver - offer.eta_to_cargo)
+
+
 def calculate_profit(offer: CargoOffer):
-    cost = offer.km_to_deliver * diesel_price * (diesel_consumption / 100)
+    cost = offer.km_to_cargo * diesel_price * (diesel_consumption / 100)
     return (offer.price - cost) / offer.eta_to_deliver
 
 
@@ -47,13 +53,23 @@ def decide(req: DecideRequest) -> DecideResponse:
     else:
         command = "ROUTE"
 
+    for offer in req.offers:
+        profit = get_profit_for_offer(offer)
+        graph.nodes[offer.origin]["observed_values"].append(profit)
+
     ##########################################
     if command == "DELIVER":
 
         best_profit = 0
         best_offer = None
         for offer in req.offers:
+
             profit = calculate_profit(offer)
+
+            if graph.nodes[offer.dest]["observed_values"]:
+                observed = graph.nodes[offer.dest]["observed_values"]
+                profit = 0.8 * profit + 0.2 * (sum(observed) / len(observed))
+
             if profit > best_profit:
                 best_profit = profit
                 best_offer = offer

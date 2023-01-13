@@ -81,23 +81,7 @@ def decide(req: DecideRequest) -> DecideResponse:
         best_profit = 0
         best_offer = None
 
-        choose_offers = []
         for offer in req.offers:
-
-            path = nx.shortest_path(graph, req.truck.loc, offer.origin)
-            path_full = nx.shortest_path(graph, offer.origin, offer.dest)
-
-            path.extend(path_full[1:])
-
-            kmh = []
-            origin = path[0]
-            for city in path[1:]:
-                kmh.append(graph[origin][city]["kmh"])
-                origin = city
-            if sum(kmh) / len(kmh) > 90:
-                choose_offers.append(offer)
-
-        for offer in choose_offers:
 
             profit = calculate_profit(offer)
             time_at_cargo = (req.truck.time + offer.eta_to_cargo) % 24

@@ -27,18 +27,24 @@ best_cities = ["Berlin", "Warsaw", "Vienna", "Milan", "Munich"]
 
 
 diesel_price = 2.023
-diesel_consumption = 20
+diesel_consumption_full = 23
+diesel_consumption_empty = 14
 
 
-def get_profit_for_offer(offer):
+def get_profit_for_offer(offer: CargoOffer):
     distance = offer.km_to_deliver - offer.km_to_cargo
-    cost = distance * diesel_price * (diesel_consumption / 100)
+    cost = distance * diesel_price * (diesel_consumption_full / 100)
     return (offer.price - cost) / (offer.eta_to_deliver - offer.eta_to_cargo)
 
 
 def calculate_profit(offer: CargoOffer):
-    cost = offer.km_to_deliver * diesel_price * (diesel_consumption / 100)
-    return (offer.price - cost) / offer.eta_to_deliver
+    empty = offer.km_to_cargo
+    full = offer.km_to_deliver - offer.km_to_cargo
+
+    cost_empty = empty * diesel_price * (diesel_consumption_empty / 100)
+    cost_full = full * diesel_price * (diesel_consumption_full / 100)
+
+    return (offer.price - cost_empty - cost_full) / offer.eta_to_deliver
 
 
 @app.post("/decide", response_model=DecideResponse)

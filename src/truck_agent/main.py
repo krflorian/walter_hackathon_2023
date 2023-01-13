@@ -51,6 +51,7 @@ def get_profit_for_offer(offer: CargoOffer):
 
 
 def calculate_profit(offer: CargoOffer):
+
     empty = offer.km_to_cargo
     full = offer.km_to_deliver - offer.km_to_cargo
 
@@ -91,21 +92,9 @@ def decide(req: DecideRequest) -> DecideResponse:
 
             profit = calculate_profit(offer)
 
-            if graph.nodes[offer.dest]["observed_values"]:
-                # observed = graph.nodes[offer.dest]["observed_values"]
-                # profit = 0.9 * profit + 0.1 * (sum(observed) / len(observed))
-
-                # time at cargo
-                time_at_cargo = (req.truck.time + offer.eta_to_cargo) % 24
-
-                if 6 <= time_at_cargo < 17:
-                    profit = profit * 1
-                else:
-                    profit = profit * 0.5
-
-                if profit > best_profit:
-                    best_profit = profit
-                    best_offer = offer
+            if profit > best_profit:
+                best_profit = profit
+                best_offer = offer
 
         if best_profit == 0:
             command = "ROUTE"

@@ -79,22 +79,16 @@ def decide(req: DecideRequest) -> DecideResponse:
         else:
             return DecideResponse(command="DELIVER", argument=best_offer.uid)
 
-    if command == "ROUTE":
+    current_loc = req.truck.loc
+    best_distance = 100000
+    next_city = ""
+    for city in best_cities:
+        distance = nx.shortest_path_length(graph, current_loc, city, weight="km")
+        if distance < best_distance:
+            next_city = city
+            best_distance = distance
 
-        current_loc = req.truck.loc
-        best_distance = 100000
-        next_city = ""
-        for city in best_cities:
-            distance = nx.shortest_path_length(graph, current_loc, city, weight="km")
-            if distance < best_distance:
-                next_city = city
-                best_distance = distance
-
-        return DecideResponse(command="ROUTE", argument=next_city)
-
-    else:
-
-        return DecideResponse(command="SLEEP", argument=1)
+    return DecideResponse(command="ROUTE", argument=next_city)
 
 
 def main():

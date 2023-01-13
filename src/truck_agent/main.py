@@ -80,8 +80,7 @@ def decide(req: DecideRequest) -> DecideResponse:
 
     current_time = req.truck.time % 24
     if (20 < current_time < 24) or (0 < current_time < 5):
-        if req.truck.hours_since_full_rest > 12:
-            return DecideResponse(command="SLEEP", argument=8)
+        return DecideResponse(command="SLEEP", argument=8)
 
     ##########################################
     if command == "DELIVER":
@@ -92,12 +91,12 @@ def decide(req: DecideRequest) -> DecideResponse:
 
             profit = calculate_profit(offer)
             time_at_cargo = (req.truck.time + offer.eta_to_cargo) % 24
-            rest_at_cargo = req.truck.hours_since_full_rest + offer.eta_to_cargo
+            # rest_at_cargo = req.truck.hours_since_full_rest + offer.eta_to_cargo
 
-            if 5 < time_at_cargo < 22:
+            if 7 < time_at_cargo < 22:
                 profit = profit
             else:
-                profit = profit * 0.6
+                profit = profit * 0.8
 
             if profit > best_profit:
                 best_profit = profit

@@ -224,3 +224,10 @@ calculate_profit(request.offers[2])
 
 
 #%%
+
+preferred_routes = []
+for city in map_data:
+    for dest in city["roads"]:
+        if dest["major"]:
+            preferred_routes.append((city["city"], dest["dest"]))
+preferred_routes

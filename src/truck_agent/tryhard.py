@@ -235,3 +235,24 @@ for city in map_data:
         if dest["major"]:
             preferred_routes.append((city["city"], dest["dest"]))
 preferred_routes
+
+
+#%%
+
+choose_offers = []
+for offer in request.offers:
+
+    path = nx.shortest_path(graph, request.truck.loc, offer.origin)
+    path_full = nx.shortest_path(graph, offer.origin, offer.dest)
+
+    path.extend(path_full[1:])
+
+    kmh = []
+    origin = path[0]
+    for city in path[1:]:
+        kmh.append(graph[origin][city]["kmh"])
+        origin = city
+    if sum(kmh) / len(kmh) > 90:
+        choose_offers.append(offer)
+
+choose_offers

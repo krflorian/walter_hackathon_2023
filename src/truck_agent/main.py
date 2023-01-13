@@ -10,7 +10,7 @@ diesel_consumption = 25
 
 def calculate_profit(offer: CargoOffer):
     cost = offer.km_to_cargo * diesel_price * (diesel_consumption / 100)
-    return offer.price - cost
+    return (offer.price - cost) / offer.eta_to_deliver
 
 
 @app.post("/decide", response_model=DecideResponse)
@@ -27,8 +27,16 @@ def decide(req: DecideRequest) -> DecideResponse:
 
     ##########################################
     if command == "DELIVER":
-        offer = req.offers[0]
-        return DecideResponse(command="DELIVER", argument=offer.uid)
+
+        best_profit = 0
+        best_offer = None
+        for offer in req.offers:
+            profit = calculate_profit(offer)
+            if profit > best_profit:
+                best_profit = profit
+                best_offer = offer
+
+        return DecideResponse(command="DELIVER", argument=best_offer.uid)
     elif command == "ROUTE":
 
         return DecideResponse(command="ROUTE", argument="Berlin")

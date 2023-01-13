@@ -93,10 +93,10 @@ def decide(req: DecideRequest) -> DecideResponse:
             profit = calculate_profit(offer)
             time_at_cargo = (req.truck.time + offer.eta_to_cargo) % 24
 
-            if 6 < time_at_cargo < 12:
+            if 6 < time_at_cargo < 22:
                 profit = profit
             else:
-                profit = profit * 0.8
+                profit = profit * 0.7
 
             if profit > best_profit:
                 best_profit = profit

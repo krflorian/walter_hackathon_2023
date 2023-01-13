@@ -1,8 +1,27 @@
 from fastapi import FastAPI
 import uvicorn
 from .api import *
+import networkx as nx
+import json
+
+with open("map.json", "r") as infile:
+    map_data = json.load(infile)
 
 app = FastAPI()
+
+graph = nx.Graph()
+
+for city in map_data:
+    for destination in city["roads"]:
+        graph.add_edge(
+            city["city"],
+            destination["dest"],
+            km=destination["km"],
+            kmh=destination["kmh"],
+        )
+
+best_cities = ["Berlin", "Warsaw", "Vienna", "Milan", "Munich"]
+
 
 diesel_price = 2.023
 diesel_consumption = 25
@@ -37,9 +56,19 @@ def decide(req: DecideRequest) -> DecideResponse:
                 best_offer = offer
 
         return DecideResponse(command="DELIVER", argument=best_offer.uid)
+
     elif command == "ROUTE":
 
-        return DecideResponse(command="ROUTE", argument="Berlin")
+        current_loc = req.truck.loc
+        best_distance = 100000
+        next_city = ""
+        for city in best_cities:
+            distance = nx.shortest_path_length(graph, current_loc, city, weight="km")
+            if distance < best_distance:
+                next_city = city
+                best_distance = distance
+
+        return DecideResponse(command="ROUTE", argument=next_city)
     else:
 
         return DecideResponse(command="SLEEP", argument=1)

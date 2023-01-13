@@ -256,3 +256,9 @@ for offer in request.offers:
         choose_offers.append(offer)
 
 choose_offers
+
+#%%
+
+path = ["asfd"]
+path.extend(["qwer"])
+path

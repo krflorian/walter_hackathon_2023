@@ -56,7 +56,7 @@ def calculate_profit(offer: CargoOffer):
     cost_empty = empty * diesel_price * (diesel_consumption_empty / 100)
     cost_full = full * diesel_price * (diesel_consumption_full / 100)
 
-    return (offer.price - cost_empty - cost_full) / offer.eta_to_deliver
+    return (offer.price - cost_empty) / offer.eta_to_deliver
 
 
 @app.post("/decide", response_model=DecideResponse)
@@ -70,13 +70,6 @@ def decide(req: DecideRequest) -> DecideResponse:
         command = "DELIVER"
     else:
         command = "ROUTE"
-
-    """
-    for offer in req.offers:
-        profit = get_profit_for_offer(offer)
-        if profit > 0:
-            graph.nodes[offer.origin]["observed_values"].append(profit)
-    """
 
     current_time = req.truck.time % 24
     if (20 < current_time < 24) or (0 < current_time < 5):

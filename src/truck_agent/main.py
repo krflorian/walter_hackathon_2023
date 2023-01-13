@@ -20,11 +20,14 @@ for city in map_data:
             kmh=destination["kmh"],
         )
 
+for node in graph.nodes:
+    graph.add_node(node, observed_values=[])
+
 best_cities = ["Berlin", "Warsaw", "Vienna", "Milan", "Munich"]
 
 
 diesel_price = 2.023
-diesel_consumption = 25
+diesel_consumption = 20
 
 
 def calculate_profit(offer: CargoOffer):

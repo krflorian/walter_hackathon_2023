@@ -87,7 +87,13 @@ def decide(req: DecideRequest) -> DecideResponse:
 
         best_profit = 0
         best_offer = None
+
+        choose_offers = []
         for offer in req.offers:
+            if offer.eta_to_cargo < 10:
+                choose_offers.append(offer)
+
+        for offer in choose_offers:
 
             profit = calculate_profit(offer)
             time_at_cargo = (req.truck.time + offer.eta_to_cargo) % 24
@@ -117,6 +123,76 @@ def decide(req: DecideRequest) -> DecideResponse:
             best_distance = distance
 
     return DecideResponse(command="ROUTE", argument=next_city)
+
+
+major_roads = [
+    ("Berlin", "Hamburg"),
+    ("Berlin", "Copenhagen"),
+    ("Berlin", "Vienna"),
+    ("Berlin", "Munich"),
+    ("Berlin", "Warsaw"),
+    ("Madrid", "Barcelona"),
+    ("Madrid", "Brussels"),
+    ("Madrid", "Paris"),
+    ("Rome", "Munich"),
+    ("Rome", "Naples"),
+    ("Rome", "Milan"),
+    ("Paris", "Barcelona"),
+    ("Paris", "Brussels"),
+    ("Paris", "Madrid"),
+    ("Paris", "Cologne"),
+    ("Bucharest", "Budapest"),
+    ("Bucharest", "Sofia"),
+    ("Bucharest", "Warsaw"),
+    ("Warsaw", "Berlin"),
+    ("Warsaw", "Vienna"),
+    ("Warsaw", "Budapest"),
+    ("Warsaw", "Bucharest"),
+    ("Hamburg", "Brussels"),
+    ("Hamburg", "Berlin"),
+    ("Hamburg", "Copenhagen"),
+    ("Hamburg", "Cologne"),
+    ("Budapest", "Sofia"),
+    ("Budapest", "Vienna"),
+    ("Budapest", "Warsaw"),
+    ("Budapest", "Bucharest"),
+    ("Vienna", "Berlin"),
+    ("Vienna", "Sofia"),
+    ("Vienna", "Munich"),
+    ("Vienna", "Warsaw"),
+    ("Vienna", "Naples"),
+    ("Vienna", "Budapest"),
+    ("Barcelona", "Madrid"),
+    ("Barcelona", "Paris"),
+    ("Barcelona", "Milan"),
+    ("Sofia", "Budapest"),
+    ("Sofia", "Vienna"),
+    ("Sofia", "Bucharest"),
+    ("Munich", "Berlin"),
+    ("Munich", "Vienna"),
+    ("Munich", "Rome"),
+    ("Munich", "Milan"),
+    ("Milan", "Barcelona"),
+    ("Milan", "Munich"),
+    ("Milan", "Naples"),
+    ("Milan", "Cologne"),
+    ("Milan", "Rome"),
+    ("Copenhagen", "Hamburg"),
+    ("Copenhagen", "Berlin"),
+    ("Copenhagen", "Cologne"),
+    ("Brussels", "Madrid"),
+    ("Brussels", "Hamburg"),
+    ("Brussels", "Paris"),
+    ("Brussels", "Cologne"),
+    ("Naples", "Vienna"),
+    ("Naples", "Rome"),
+    ("Naples", "Milan"),
+    ("Cologne", "Brussels"),
+    ("Cologne", "Hamburg"),
+    ("Cologne", "Copenhagen"),
+    ("Cologne", "Paris"),
+    ("Cologne", "Milan"),
+]
 
 
 def main():

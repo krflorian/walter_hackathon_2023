@@ -202,7 +202,11 @@ all_profits
 
 #%%
 
-graph.nodes["Valencia"]
+choose_offers = []
+for offer in request.offers:
+    if offer.eta_to_cargo < 10:
+        choose_offers.append(offer)
+choose_offers
 
 
 #%%

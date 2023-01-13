@@ -88,7 +88,7 @@ def decide(req: DecideRequest) -> DecideResponse:
             return DecideResponse(command="DELIVER", argument=best_offer.uid)
 
     current_loc = req.truck.loc
-    best_distance = 100000
+    best_distance = 1000000
     next_city = ""
     for city in best_cities:
         distance = nx.shortest_path_length(graph, current_loc, city, weight="km")

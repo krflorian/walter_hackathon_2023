@@ -64,3 +64,23 @@ graph_info.sort_values("betweenness_centrality", ascending=False)
 
 graph_info.sort_values("closeness_centrality", ascending=False)
 
+#%%
+
+
+import json
+import pandas as pd
+import plotly.express as xp
+
+# initialize graph
+with open("map.json", "r") as infile:
+    map_data = json.load(infile)
+
+cities = pd.DataFrame(
+    [{k: v for k, v in city.items() if k != "roads"} for city in map_data]
+)
+cities.sort_values("population", ascending=False)
+
+
+xp.scatter(cities, x="lng", y="lat", hover_data=["country", "population", "city"])
+
+#%%

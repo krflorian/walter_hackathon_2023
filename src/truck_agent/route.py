@@ -5,9 +5,18 @@ import pandas as pd
 from .api import TruckState, CargoOffer
 from .deliver import get_profit_for_offer
 
-best_cities = ["Berlin", "Warsaw", "Vienna", "Milan", "Munich", "Brussels", "Cologne"]
+best_cities = [
+    "Berlin",
+    "Warsaw",
+    "Vienna",
+    "Milan",
+    "Munich",
+    "Brussels",
+    "Cologne",
+    "Paris",
+]
 
-
+# initialize graph
 with open("map.json", "r") as infile:
     map_data = json.load(infile)
 
@@ -38,7 +47,7 @@ def update_graph(offers: list[CargoOffer]):
 def route(truck: TruckState):
 
     best_distance = 1000000
-    next_city = ""
+    next_city = None
 
     for city in best_cities:
         distance = nx.shortest_path_length(graph, truck.loc, city, weight="km")

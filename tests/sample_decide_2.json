@@ -190,7 +190,7 @@
       "name": "Fuel Cells",
       "price": 2072.0,
       "eta_to_cargo": 13.8,
-      "km_to_cargo": 1228.0,
+      "km_to_cargo": 0,
       "km_to_deliver": 3460.0,
       "eta_to_deliver": 37.07
     },

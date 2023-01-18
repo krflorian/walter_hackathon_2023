@@ -4,6 +4,7 @@ from truck_agent.main import app
 
 client = TestClient(app)
 
+
 def test_sample_decide_request():
     """
     Use this test to check if the truck_agent is working correctly.

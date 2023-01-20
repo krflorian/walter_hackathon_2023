@@ -24,7 +24,7 @@ def decide(req: DecideRequest) -> DecideResponse:
         if offer_id is not None:
             return DecideResponse(command="DELIVER", argument=offer_id)
 
-    city = route(req.truck, graph)
+    city = route(req.truck)
     if city is not None:
         if not city == req.truck.loc:
             return DecideResponse(command="ROUTE", argument=city)

@@ -29,7 +29,7 @@ def decide(req: DecideRequest) -> DecideResponse:
         if not city == req.truck.loc:
             return DecideResponse(command="ROUTE", argument=city)
 
-    return DecideResponse(command="SLEEP", argument=8)
+    return DecideResponse(command="SLEEP", argument=1)
 
 
 def main():

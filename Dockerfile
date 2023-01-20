@@ -7,7 +7,6 @@ COPY src /app/src
 
 RUN pip install .
 RUN pip install networkx 
-RUN pip install pandas 
 
 EXPOSE 8080
 

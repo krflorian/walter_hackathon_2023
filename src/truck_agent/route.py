@@ -1,6 +1,7 @@
 import json
 import networkx as nx
-import pandas as pd
+
+# import pandas as pd
 
 from .api import TruckState, CargoOffer
 from .deliver import get_profit_for_offer
@@ -58,6 +59,7 @@ def route(truck: TruckState):
     return next_city
 
 
+"""
 def get_centrality_measures(graph):
     centrality_measures = pd.DataFrame()
     for measure in (
@@ -68,3 +70,4 @@ def get_centrality_measures(graph):
         measure_result = measure(graph)
         centrality_measures[str(measure.__name__)] = pd.Series(measure_result)
     return centrality_measures
+"""

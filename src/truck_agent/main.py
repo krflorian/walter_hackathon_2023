@@ -17,7 +17,6 @@ def decide(req: DecideRequest) -> DecideResponse:
     """
 
     graph = update_graph(offers=req.offers)
-    print(graph.nodes["Barcelona"])
 
     if req.offers:
 

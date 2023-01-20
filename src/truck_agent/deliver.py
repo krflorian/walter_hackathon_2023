@@ -22,12 +22,9 @@ def calculate_profit(offer: CargoOffer):
     cost_empty = empty * diesel_price * (diesel_consumption_empty / 100)
     cost_full = full * diesel_price * (diesel_consumption_full / 100)
 
-    profit = (offer.price - cost_empty - cost_full) / offer.eta_to_deliver
+    profit = (offer.price - 2 * cost_empty - cost_full) / offer.eta_to_deliver
 
-    if empty <= 10:
-        return profit
-    else:
-        return profit - (cost_empty / offer.eta_to_cargo)
+    return profit
 
 
 def deliver(offers, graph):

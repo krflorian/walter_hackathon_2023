@@ -2,12 +2,19 @@
 
 from src.truck_agent.api import DecideRequest, DecideResponse
 from src.truck_agent.deliver import deliver
-from src.truck_agent.route import update_graph, route, graph
+from src.truck_agent.route import update_graph, route
 
 import json
 
+#%%
 
-def decide(req: DecideRequest):
+
+def decide(req: DecideRequest) -> DecideResponse:
+    """
+    See https://app.swaggerhub.com/apis-docs/walter-group/walter-group-hackathon-sustainable-logistics/1.0.0 for
+    a detailed description of this endpoint.
+    deploy
+    """
 
     graph = update_graph(offers=req.offers)
 
@@ -24,6 +31,8 @@ def decide(req: DecideRequest):
 
     return DecideResponse(command="SLEEP", argument=8)
 
+
+#%%
 
 for i in range(4):
 

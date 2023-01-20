@@ -31,15 +31,14 @@ def deliver(offers, graph):
 
     best_profit = 0
     best_offer = None
-    offers = sorted(offers, key=lambda x: x.eta_to_cargo)[:-5]
 
     for offer in offers:
 
         profit = calculate_profit(offer)
 
         if graph.nodes[offer.dest]["observed_values"]:
-            observed = graph.nodes[offer.dest]["observed_values"]
-            profit = 0.9 * profit + 0.1 * (sum(observed) / len(observed))
+            observed = graph.nodes[offer.dest]["observed_values"][-5:]
+            profit = 0.9 * profit + 0.2 * (sum(observed) / len(observed))
 
         if profit > best_profit:
             best_profit = profit

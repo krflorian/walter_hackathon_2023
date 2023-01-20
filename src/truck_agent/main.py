@@ -13,6 +13,7 @@ def decide(req: DecideRequest) -> DecideResponse:
     """
     See https://app.swaggerhub.com/apis-docs/walter-group/walter-group-hackathon-sustainable-logistics/1.0.0 for
     a detailed description of this endpoint.
+    deploy
     """
 
     graph = update_graph(offers=req.offers)
